@@ -83,18 +83,26 @@ SFACE_MODEL_PATH = os.path.join(
 
 
 # Backend
-BACKEND_URL = "http://localhost:5000"
+# ============================================================
+# BACKEND AND FACE SERVICE CONFIGURATION
+# ============================================================
+
+BACKEND_URL = os.environ.get(
+    "BACKEND_URL",
+    "http://localhost:5000"
+).rstrip("/")
 
 FACE_REGISTRATION_ENDPOINT = (
     f"{BACKEND_URL}/api/students/register-face"
 )
 
 
-# Face service
-FACE_SERVICE_HOST = "127.0.0.1"
-FACE_SERVICE_PORT = 8000
+# Render automatically provides PORT.
+FACE_SERVICE_HOST = "0.0.0.0"
 
-
+FACE_SERVICE_PORT = int(
+    os.environ.get("PORT", "8000")
+)
 # Camera registration
 WINDOW_NAME = "Attendify - Face Registration"
 
