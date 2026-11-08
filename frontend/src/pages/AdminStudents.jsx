@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
-const BACKEND_URL = "http://localhost:5000";
-const FACE_SERVICE_URL = "http://127.0.0.1:8000";
+const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const FACE_SERVICE_URL = import.meta.env.VITE_FACE_SERVICE_URL || "http://127.0.0.1:8000";
 
 function AdminStudents() {
 const [step, setStep] = useState(1);

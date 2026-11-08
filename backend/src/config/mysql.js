@@ -1,15 +1,32 @@
 
 const { Sequelize } = require("sequelize");
+const fs = require("fs");
+const path = require("path");
+
+const caPath = path.join(__dirname, "../../certs/ca.pem");
+
+if (!fs.existsSync(caPath)) {
+  throw new Error("Aiven CA certificate not found: " + caPath);
+}
 
 const sequelize = new Sequelize(
   process.env.MYSQL_DATABASE,
   process.env.MYSQL_USER,
   process.env.MYSQL_PASSWORD,
   {
-    host: process.env.MYSQL_HOST || "localhost",
+    host: process.env.MYSQL_HOST,
     port: Number(process.env.MYSQL_PORT) || 3306,
     dialect: "mysql",
+
+    dialectOptions: {
+      ssl: {
+        ca: fs.readFileSync(caPath),
+        rejectUnauthorized: true
+      }
+    },
+
     logging: false,
+
     pool: {
       max: 5,
       min: 0,
@@ -22,9 +39,9 @@ const sequelize = new Sequelize(
 const connectMySQL = async () => {
   try {
     await sequelize.authenticate();
-    console.log("MySQL connected successfully!");
+    console.log("Aiven MySQL connected successfully!");
   } catch (error) {
-    console.error("MySQL connection failed:", error.message);
+    console.error("Aiven MySQL connection failed:", error.message);
     throw error;
   }
 };
